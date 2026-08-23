@@ -172,7 +172,7 @@ elseif strcmpi(merra_model,'merra2')
     filesTOdownlaod = [repmat('http://goldsmr5.gesdisc.eosdis.nasa.gov/daac-bin/OTF/HTTP_services.cgi?FILENAME=%2Fdata%2Fs4pa%2FMERRA2%2FM2I6NPANA.5.12.4%2F',n_files,1) date_vector(:,1:4) repmat('%2F',n_files,1) date_vector(:,5:6) repmat('%2FMERRA2_',n_files,1) datasetnumber_str repmat('.inst6_3d_ana_Np.',n_files,1) date_vector(:,1:8) repmat('.nc4&FORMAT=bmM0Yy8&BBOX=',n_files,1) repmat(num2str(S),n_files,1)  repmat('%2C',n_files,1) repmat(num2str(W),n_files,1) repmat('%2C',n_files,1) repmat(num2str(N),n_files,1) repmat('%2C',n_files,1) repmat(num2str(E),n_files,1) repmat('&TIME=1979-01-01T',n_files,1) time_vector(:,1:2) repmat('%3A00%3A00%2F1979-01-01T',n_files,1) time_vector(:,1:2) repmat('%3A00%3A00&LABEL=svc_MERRA2_',n_files,1) datasetnumber_str repmat('.inst6_3d_ana_Np.',n_files,1) date_vector(:,1:8) repmat('.nc4&FLAGS=&SHORTNAME=M2I6NPANA&SERVICE=SUBSET_MERRA2&LAYERS=&VERSION=1.02&VARIABLES=',n_files,1)];
     % the filename of the downloaded file as to be stored
     downloadFILEname = [repmat([merra_datapath filesep],n_files,1) date_vector(:,1:8) repmat(filesep,n_files,1)  repmat('MERRA2_',n_files,1) date_vector(:,1:8)  repmat('_',n_files,1) time_vector(:,1:2)  repmat('.nc4',n_files,1)];
-
+    
 else
     error('Does not exist. Either MERRA or MERRA2 model')
 end
@@ -193,8 +193,8 @@ if orderflag==1
             fprintf(['Downloading: ' downloadfile file_ext '\n'])
             try
                 pause(5); 
-                pass_to_cmd=['wget --user ',usern,' --password ', pass,' ''',filesTOdownlaod(k,:),'''',' -O ',downloadFILEname(k,:)];
-                [a,b] = system(pass_to_cmd);
+                pass_to_cmd=['wget  --no-check-certificate  --user  ',usern,' --password ', pass,' ''',filesTOdownlaod(k,:),'''',' -O ',downloadFILEname(k,:)];
+                [a,b] = system(pass_to_cmd);               
                 clear a b pass_to_cmd;
             catch ME
                 fprintf('File not found \n')
@@ -221,8 +221,9 @@ if orderflag==1
                 fprintf(['Downloading: ' downloadfile file_ext '\n'])
                 try
                     pause(5); 
-                    pass_to_cmd=['wget --user ',usern,' --password ', pass,' ''',filesTOdownlaod(k,:),'''',' -O ',downloadFILEname(k,:)];
+                    pass_to_cmd=['wget --no-check-certificate  --user ',usern,' --password ', pass,' ''',filesTOdownlaod(k,:),'''',' -O ',downloadFILEname(k,:)];
                     [a,b] = system(pass_to_cmd);
+                    
                     clear a b pass_to_cmd;
                 catch ME
                     fprintf('File not found \n')

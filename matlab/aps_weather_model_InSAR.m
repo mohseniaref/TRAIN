@@ -73,7 +73,7 @@ else
 end 
 lambda = getparm_aps('lambda',1)*100;                       % radar wavelength in cm
 datestructure = 'yyyymmdd';                               % assumed date structure for era
-inc_angle =  getparm_aps('look_angle',1);
+%inc_angle =  getparm_aps('look_angle',1);
 
 
 % loading the data
@@ -83,10 +83,13 @@ if strcmp(stamps_processed,'y')
    load psver
    dates = ps.day;
    lonlat = ps.lonlat;
-   if ischar(inc_angle)==1
-       inc_angle = load(inc_angle);
-       inc_angle = inc_angle.la;
-   end
+%    if strcmp(getparm('insar_processor'),'isce')ischar(inc_angle)==1
+%        inc_angle = load(inc_angle);
+%        inc_angle = inc_angle.ll;
+%    if  strcmp(getparm('insar_processor'),'isce')
+       inc_angle = load('inc2.mat');
+       inc_angle = inc_angle.inc;
+%        end
    
    % getting the dropped ifgs
    drop_ifg_index = getparm('drop_ifg_index');

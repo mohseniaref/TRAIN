@@ -15,7 +15,7 @@ function [time_before,time_after, date_before, date_after,f_before,f_after] = ap
 if nargin>3
     fprintf('Throwing out dates after model lag time')
     % Make sure all the data exist
-    end_date = today() - model_lag;
+    end_date = now - model_lag;
     date_fails=dates>end_date;
     if sum(date_fails)>0
         fprintf(['The following dates will not have data and are skipped (model lag is ' num2str(model_lag) ')\n'])

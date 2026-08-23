@@ -38,8 +38,8 @@ password=$1
 username=$2
 filelist=$3
 
-ftp_site='ftp.badc.rl.ac.uk'
 
+maindirectory=$(pwd)
 
 echo $curdir
 for f in `cat $filelist`
@@ -48,11 +48,17 @@ do
         day=`echo $f | gawk 'BEGIN {FS="/"} {print substr($(NF),11,2)}'`
 	month=`echo $f | gawk 'BEGIN {FS="/"} {print substr($(NF),9,2)}'`
 	year=`echo $f | gawk 'BEGIN {FS="/"} {print substr($(NF),5,4)}'`
+
+ftp_link=ftp://ftp.ceda.ac.uk/badc/ecmwf-era-interim/data/gg/ap/$year/$month/$day/$f
 	
-	echo $day
-file=/.badc.old/ecmwf-era-interim/data/gg/ap/$year/$month/$day/${f}
-
+        
+# make the director for specifc date
+    if [ ! -d "$date" ] ; then
+       mkdir $date
+    fi
+   
+        cd $date
 	echo $file
-	ncftpget -u $username -p $password $ftp_site ./. $file
+	ncftpget -u $username -p $password $ftp_link
+        cd $maindirectory
 done
-

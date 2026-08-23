@@ -1,8 +1,12 @@
 # TRAIN
-**Toolbox for Reducing Atmospheric InSAR Noise**
+**Toolbox for Reducing Atmospheric InSAR Noise — v3.1-alpha**
 
 TRAIN provides state-of-the-art tropospheric correction methods for InSAR time-series analysis.  
 It is processor-independent and compatible with **StaMPS**, **MintPy**, **ISCE**, and ROI\_PAC-derived workflows.
+
+This repository (v3.1-alpha, M. Mohseni Aref) extends **Version 3beta** by D. Bekaert (University of Leeds / JPL),
+distributed under a **GNU GPL** licence. The extension adds Python-based ERA5/ERA5T download and
+MERIS/OLCI processing; the core MATLAB toolbox and licence remain unchanged.
 
 ```
 We welcome community contributions and request users to contribute back to the repo.
@@ -86,14 +90,7 @@ For the **power-law** method also cite:
 > *A spatially-variable power-law tropospheric correction technique for InSAR data*,
 > JGR Solid Earth, doi:[10.1029/2014JB011558](https://doi.org/10.1029/2014JB011558)
 
-For the **ERA5 / PyAPS3 download** scripts (`python_modules/aps_era5_download.py`) also cite:
-
-> Mohseni Aref, M. et al. (2026), contributions via MintPy/PyAPS3 integration,
-> see [MintPy](https://github.com/insarlab/MintPy) and PyAPS3.
-
-For **MERIS/OLCI** Python processing (`python_modules/aps_meris_pwv.py`) also cite:
-
-> Mohseni Aref, M. (2026), Python MERIS/OLCI atmospheric correction for TRAIN.
+For the **Python ERA5 download and MERIS processing** scripts also cite this repository (v3.1-alpha, doi in Zenodo section below).
 
 ---
 

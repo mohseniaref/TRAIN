@@ -2,7 +2,7 @@
 **Toolbox for Reducing Atmospheric InSAR Noise — v3.1-alpha**
 
 TRAIN provides state-of-the-art tropospheric correction methods for InSAR time-series analysis.  
-It is processor-independent and compatible with **StaMPS**, **MintPy**, **ISCE**, and ROI\_PAC-derived workflows.
+It is processor-independent and compatible with **StaMPS**, **ISCE**, and ROI\_PAC-derived workflows.
 
 This repository (v3.1-alpha, M. Mohseni Aref) extends **Version 3beta** by D. Bekaert (University of Leeds / JPL),
 distributed under a **GNU GPL** licence. The extension adds Python-based ERA5/ERA5T download and

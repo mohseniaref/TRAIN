@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Download ERA5 / ERA5T grib files for TRAIN using PyAPS3 (MintPy).
 
 Replaces aps_era5_ECMWF_Python.m and the download portion of aps_era5_files.m.

@@ -107,6 +107,15 @@ if start_step<=2 && end_step >=2
     region_res  = getparm_aps('region_res');
     UTC_sat     = getparm_aps('UTC_sat');
     inc_angle   = getparm_aps('look_angle');        % mean look/incidence angle [deg]
+    if isempty(meris_datapath) == 1
+        error('Specify meris_datapath for MERIS tropospheric delay processing')
+    end
+    if isempty(region_lat_range) == 1 || isempty(region_lon_range) == 1
+        error('Specify region_lat_range and region_lon_range for MERIS tropospheric delay processing')
+    end
+    if isempty(inc_angle) == 1
+        error('Specify look_angle for MERIS tropospheric delay processing')
+    end
     conversion  = getparm_aps('spectrometer_PIconversion');
     if isempty(conversion); conversion = 6.2e-4; end
     if length(conversion) > 1; conversion = mean(conversion); end   % use mean for single-call
@@ -155,6 +164,5 @@ end
 
 
 cd(curdir)
-
 
 

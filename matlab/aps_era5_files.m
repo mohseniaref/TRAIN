@@ -121,71 +121,66 @@ fclose(fid2);
 
 
 
-%% Below is specific for the ECMWF data website
-crop_range_in = 2; % increasing extent of weather data region by this value (degree)
-overwrite_flag=-1;
+%% Download ERA5 / ERA5T via PyAPS3 (replaces per-date ecmwfapi scripts)
+% Uses python_modules/aps_era5_download.py which calls MintPy PyAPS3.
+% ERA5T (near-real-time, last ~3 months) is handled transparently by the
+% CDS API; no separate flag is required.
 if orderflag_ECMWF_website==1
 
-    
-    % weather model region
-    fprintf('getting the data from the ECMWF service ...')
     region_lat_range = getparm_aps('region_lat_range');
     region_lon_range = getparm_aps('region_lon_range');
-    if isempty(region_lat_range) == 1
-        error('Specify the region for the weather model data')
+    if isempty(region_lat_range) == 1 || isempty(region_lon_range) == 1
+        error('Specify region_lat_range and region_lon_range for the weather model data')
     end
-    fprintf('increasing crop area by %s deg in each direction \n',num2str(crop_range_in))
-    S = num2str(min(round(region_lat_range)) - crop_range_in);
-    N = num2str(max(round(region_lat_range)) + crop_range_in);
-    W = num2str(min(round(region_lon_range)) - crop_range_in);
-    E = num2str(max(round(region_lon_range)) + crop_range_in);       % DB fixed typo min to max  
-    weatherregstr = [N,'/',W,'/',S,'/',E];   % N/W/S/E
-    fprintf('weather model region N/W/S/E %s \n',weatherregstr);
-    fprintf('using mars service from ECMWF downloading to \n %s \n',era5_datapath);
-    % folder structure YYYYMMDD times within
 
-    
-    for l = 1:size(filelist,1)
-        subdirpath = [era5_datapath,'/',filelist(l,5:12),'/'];
-        if exist(subdirpath,'dir') == 0
-            fprintf('creating directory %s \n',subdirpath);
-            mkdir(subdirpath)
-        end
-        if exist([subdirpath,'ggap', filelist(l,5:16) '.nc'],'file') == 0
-            cd(subdirpath)
-            fprintf('Order and downloading %s \n',filelist(l,5:16))
-            aps_era5_ECMWF_Python(filelist(l,5:16),weatherregstr) %write python donwload file
-            python_str = ['python ',filelist(l,5:16),'.py > ',filelist(l,5:16),'down.log &'];
-            [a,b] = system(python_str); % start python script
-            clear a b
-            cd ..
-        else
-            if overwrite_flag==-1
-                str='';
-                while ~strcmpi(str,'y') && ~strcmpi(str,'n') 
-                    fprintf(['Do you want to overwrite existing files? \n'])  
-                    str = input('[y: for yes, n: no] \n','s');
-                end
-                if strcmpi(str,'n')
-                    overwrite_flag=0;
-                else
-                    overwrite_flag=1;
-                end
-            end
-            % check if the files need to be overwritten
-            if overwrite_flag==1
-                cd(subdirpath)
-                delete([subdirpath,'ggap', filelist(l,5:16) '.nc'])
-                fprintf('Order and downloading %s \n',filelist(l,5:16))
-                aps_era5_ECMWF_Python(filelist(l,5:16),weatherregstr) %write python donwload file
-                python_str = ['python ',filelist(l,5:16),'.py > ',filelist(l,5:16),'down.log &'];
-                [a,b] = system(python_str); % start python script
-                clear a b
-                cd ..
-            elseif overwrite_flag==0
-                fprintf('File %s has already been downloaded \n',filelist(l,:))
-            end
-        end
+    S_val = min(region_lat_range);
+    N_val = max(region_lat_range);
+    W_val = min(region_lon_range);
+    E_val = max(region_lon_range);
+
+    % build space-separated date list string
+    date_str_list = '';
+    for l = 1:size(datelist,1)
+        date_str_list = [date_str_list ' ' datelist(l,:)];
+    end
+    date_str_list = strtrim(date_str_list);
+
+    % locate the Python download script relative to this MATLAB file
+    train_root = fileparts(fileparts(which('aps_era5_files')));
+    pysc = fullfile(train_root, 'python_modules', 'aps_era5_download.py');
+    if ~exist(pysc, 'file')
+        error('Cannot find aps_era5_download.py at %s', pysc);
+    end
+
+    utc_val = str2double(UTC_sat(1:2))*3600 + str2double(UTC_sat(4:5))*60;
+    snwe_str = [num2str(S_val) ' ' num2str(N_val) ' ' num2str(W_val) ' ' num2str(E_val)];
+
+    era5t_flag = getparm_aps('era5t_flag',1);
+
+    era5t_opt = '';
+
+    if strcmpi(era5t_flag,'y')
+
+        era5t_opt = ' --era5t';
+
+    end
+
+
+
+    fprintf('Downloading ERA5/ERA5T via PyAPS3 to %s\n', era5_datapath);
+    cmd = ['python3 "' pysc '"' ...
+
+           ' --dates ' date_str_list ...
+           ' --utc-sec ' num2str(utc_val) ...
+           ' --snwe ' snwe_str ...
+           ' --outdir "' era5_datapath '"' era5t_opt];
+
+    fprintf('Running: %s\n', cmd);
+    [status, msg] = system(cmd);
+    if status ~= 0
+        warning('ERA5 download returned non-zero exit: %s', msg);
+    else
+        fprintf('%s\n', msg);
     end
     cd(workdir)
 end

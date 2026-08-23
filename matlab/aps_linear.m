@@ -91,6 +91,8 @@ end
 % loading the data
 phuw = load(phuw_matfile);
 lonlat = load(ll_matfile);
+lonlat = lonlat.lonlat;
+
 hgt = load(hgt_matfile);
 if strcmp(stamps_processed,'y')
    load psver
@@ -98,7 +100,7 @@ else
     psver = 2;
 end
 phuw = phuw.ph_uw;     
-lonlat = lonlat.lonlat;
+
 hgt = hgt.hgt;   
 
 

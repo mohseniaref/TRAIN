@@ -343,15 +343,22 @@ if ~isfield(parms,'modis_recalibrated')
 end
 
 
-%% regarding ERA-I
+%% regarding ERA-Interim (discontinued Aug 2019 - use ERA5 instead)
 if ~isfield(parms,'era_datapath')
-    % ERA-I data path
     parms.era_datapath = [];
 end
-
 if ~isfield(parms,'era_data_type')
-    % ERA-I data website (BADC or ECMWF)
-    parms.era_data_type ='ECMWF';
+    parms.era_data_type = 'ECMWF';
+end
+
+%% regarding ERA5 / ERA5T (via PyAPS3 + CDS API)
+if ~isfield(parms,'era5_datapath')
+    % ERA5 grib file directory (PyAPS3 naming: ERA5_N##_N##_W##_E##_YYYYMMDD_HH.grb)
+    parms.era5_datapath = [];
+end
+if ~isfield(parms,'era5t_flag')
+    % 'y' to force ERA5T near-real-time; 'n' lets CDS API decide automatically
+    parms.era5t_flag = 'n';
 end
 
 %% regarding gacos

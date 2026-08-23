@@ -1,6 +1,11 @@
 function [] = aps_era_files(orderflag_ECMWF_website)
 % script that runs and checks which ERA-I data files are needed based on
 % the satellite pass time from the ECMWF website.
+%
+% NOTE: ERA-Interim was DISCONTINUED by ECMWF in August 2019.
+%       New processing should use ERA5 via aps_era5_files / aps_weather_model('era5',...).
+%       This function is kept only for legacy data already downloaded in ggap*.nc format.
+%
 % INPUTS:
 %
 %        ****** Specific for ECMWF data website ****** NOT BADC

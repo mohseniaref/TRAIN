@@ -99,7 +99,7 @@ For **MERIS/OLCI** Python processing (`python_modules/aps_meris_pwv.py`) also ci
 
 ## Zenodo
 
-A citable archive of this toolbox is available on Zenodo:
+A citable archive of this toolbox (v3.1-alpha) is available on Zenodo:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
 

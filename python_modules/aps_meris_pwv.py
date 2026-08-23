@@ -239,14 +239,16 @@ def process_meris_date(meris_tif, tgt_lats, tgt_lons, inc_angle_deg,
     iwv_filled = fill_gaps(iwv)
 
     # ---- get 1-D lat/lon vectors for regular-grid interpolation ----
-    # MERIS data is typically in geographic projection; collapse to 1-D axes
-    src_lat_1d = np.sort(np.unique(np.round(src_lats_2d[:, 0], 5)))
-    src_lon_1d = np.sort(np.unique(np.round(src_lons_2d[0, :], 5)))
+    # Use one coordinate per row/col (do not sort independently of the data)
+    src_lat_1d = np.round(src_lats_2d[:, 0], 5)
+    src_lon_1d = np.round(src_lons_2d[0, :], 5)
 
     if src_lat_1d[0] > src_lat_1d[-1]:
         src_lat_1d = src_lat_1d[::-1]
         iwv_filled = iwv_filled[::-1, :]
-
+    if src_lon_1d[0] > src_lon_1d[-1]:
+        src_lon_1d = src_lon_1d[::-1]
+        iwv_filled = iwv_filled[:, ::-1]
     # ---- resample to InSAR grid ----
     iwv_insar = resample_to_grid(iwv_filled, src_lat_1d, src_lon_1d,
                                   tgt_lats, tgt_lons)

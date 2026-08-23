@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Process Envisat MERIS / Sentinel-3 OLCI water-vapour products for TRAIN.
 
 Python replacement for aps_meris_SAR.m and aps_meris_InSAR.m.

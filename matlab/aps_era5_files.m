@@ -129,8 +129,8 @@ if orderflag_ECMWF_website==1
 
     region_lat_range = getparm_aps('region_lat_range');
     region_lon_range = getparm_aps('region_lon_range');
-    if isempty(region_lat_range) == 1
-        error('Specify the region for the weather model data')
+    if isempty(region_lat_range) == 1 || isempty(region_lon_range) == 1
+        error('Specify region_lat_range and region_lon_range for the weather model data')
     end
 
     S_val = min(region_lat_range);
@@ -155,18 +155,26 @@ if orderflag_ECMWF_website==1
     utc_val = str2double(UTC_sat(1:2))*3600 + str2double(UTC_sat(4:5))*60;
     snwe_str = [num2str(S_val) ' ' num2str(N_val) ' ' num2str(W_val) ' ' num2str(E_val)];
 
-    era5t_flag = getparm_aps('era5t_flag',1);
-    era5t_opt = '';
-    if strcmpi(era5t_flag,'y')
-        era5t_opt = ' --era5t';
-    end
-
+    era5t_flag = getparm_aps('era5t_flag',1);
+
+    era5t_opt = '';
+
+    if strcmpi(era5t_flag,'y')
+
+        era5t_opt = ' --era5t';
+
+    end
+
+
+
     fprintf('Downloading ERA5/ERA5T via PyAPS3 to %s\n', era5_datapath);
-    cmd = ['python3 "' pysc '"' ...
+    cmd = ['python3 "' pysc '"' ...
+
            ' --dates ' date_str_list ...
            ' --utc-sec ' num2str(utc_val) ...
            ' --snwe ' snwe_str ...
-           ' --outdir "' era5_datapath '"' era5t_opt];
+           ' --outdir "' era5_datapath '"' era5t_opt];
+
     fprintf('Running: %s\n', cmd);
     [status, msg] = system(cmd);
     if status ~= 0

@@ -38,9 +38,7 @@ password=$1
 username=$2
 filelist=$3
 
-
 maindirectory=$(pwd)
-
 echo $curdir
 for f in `cat $filelist`
 do
@@ -51,7 +49,9 @@ do
 
 ftp_link=ftp://ftp.ceda.ac.uk/badc/ecmwf-era-interim/data/gg/ap/$year/$month/$day/$f
 	
-        
+	echo $day
+file=${f}
+
 # make the director for specifc date
     if [ ! -d "$date" ] ; then
        mkdir $date

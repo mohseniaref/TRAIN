@@ -38,8 +38,10 @@ curdir = pwd;
 if nargin <3
     error('Need to specify at least model_type, start_step, end_step');
 end
-if ~strcmpi(model_type,'era5') & ~strcmpi(model_type,'era') & ~strcmpi(model_type,'gacos') & ~strcmpi(model_type,'merra') & ~strcmpi(model_type,'narr') & ~strcmpi(model_type,'merra2')
-    error(['model_type needs to be era, merra, merra2, gacos, era5, narr'])
+% era5t is an alias for era5 (near-real-time; handled transparently by CDS API)
+if strcmpi(model_type,'era5t'); model_type = 'era5'; end
+if ~strcmpi(model_type,'era5') && ~strcmpi(model_type,'era') && ~strcmpi(model_type,'gacos') && ~strcmpi(model_type,'merra') && ~strcmpi(model_type,'narr') && ~strcmpi(model_type,'merra2')
+    error('model_type needs to be era, era5, era5t, merra, merra2, gacos, narr')
 end
 % define save path if not given
 if nargin<4

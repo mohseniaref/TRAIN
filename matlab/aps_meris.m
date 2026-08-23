@@ -98,20 +98,53 @@ if start_step==1
 end
 
 if start_step<=2 && end_step >=2
-    % SAR delays using MERIS data
-    fprintf('Step 2: Compute MERIS tropospheric delay for individual dates\n')
-    
-    % generating a file list of the files to be processed:
-    meris_datapath = getparm_aps('meris_datapath');
-    command_str = 'echo files > meris_batch_file.txt';
-    command_str2 = ['ls -d ' meris_datapath filesep '2*' filesep 'MER_RR_*reprojected.tif >> meris_batch_file.txt'];
+    % SAR delays using MERIS data — Python implementation via aps_meris_pwv.py
+    fprintf('Step 2: Compute MERIS tropospheric delay for individual dates (Python)\n')
 
-    [temp, temp1] = system(command_str);
-    [temp, temp1] = system(command_str2);
-    clear temp temp1
-        
-    % running the MERIS computation on the file list
-    aps_meris_SAR('meris_batch_file.txt')
+    meris_datapath = getparm_aps('meris_datapath');
+    region_lat_range = getparm_aps('region_lat_range');
+    region_lon_range = getparm_aps('region_lon_range');
+    region_res  = getparm_aps('region_res');
+    UTC_sat     = getparm_aps('UTC_sat');
+    inc_angle   = getparm_aps('look_angle');        % mean look/incidence angle [deg]
+    conversion  = getparm_aps('spectrometer_PIconversion');
+    if isempty(conversion); conversion = 6.2e-4; end
+    if length(conversion) > 1; conversion = mean(conversion); end   % use mean for single-call
+    if isempty(region_res); region_res = 0.001; end
+
+    % build meris file list
+    command_str  = 'echo files > meris_batch_file.txt';
+    command_str2 = ['ls -d ' meris_datapath filesep '2*' filesep 'MER_RR_*reprojected.tif >> meris_batch_file.txt'];
+    system(command_str);
+    system(command_str2);
+
+    % locate Python script
+    train_root = fileparts(fileparts(which('aps_meris')));
+    pysc = fullfile(train_root, 'python_modules', 'aps_meris_pwv.py');
+    if ~exist(pysc, 'file')
+        error('Cannot find aps_meris_pwv.py at %s', pysc);
+    end
+
+    lat_str = [num2str(min(region_lat_range)) ' ' num2str(max(region_lat_range))];
+    lon_str = [num2str(min(region_lon_range)) ' ' num2str(max(region_lon_range))];
+    outdir  = fullfile(pwd, 'meris_delays');
+
+    cmd = ['python ' pysc ...
+           ' --meris-files meris_batch_file.txt' ...
+           ' --lat-range ' lat_str ...
+           ' --lon-range ' lon_str ...
+           ' --res ' num2str(region_res) ...
+           ' --inc-angle ' num2str(inc_angle) ...
+           ' --conversion ' num2str(conversion) ...
+           ' --sensor meris' ...
+           ' --outdir ' outdir];
+    fprintf('Running: %s\n', cmd);
+    [status, msg] = system(cmd);
+    if status ~= 0
+        warning('aps_meris_pwv.py returned non-zero: %s', msg);
+    else
+        fprintf('%s\n', msg);
+    end
 end
 if start_step<=3 && end_step >=3
     fprintf('Step 3: Computes MERIS tropospheric delay for inteferograms\n')

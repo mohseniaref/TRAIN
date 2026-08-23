@@ -1,7 +1,21 @@
 
 
-# to get the ecmwf api set-up you can use:
-pip install --user https://software.ecmwf.int/wiki/download/attachments/47287906/ecmwf-api-client-python.tgz
-# make sure you get also an account and follow the information on their website
+# Python dependencies for TRAIN
+# --------------------------------
+# ERA5 / ERA5T download (replaces old ecmwfapi):
+pip install pyaps3 cdsapi
+# Configure CDS API credentials at: https://cds.climate.copernicus.eu/api-how-to
+# Create ~/.cdsapirc with:
+#   url: https://cds.climate.copernicus.eu/api
+#   key: <UID>:<API-key>
 
+# MERIS / OLCI processing:
+pip install rasterio scipy numpy
+
+# Optional – MintPy integration (provides the PyAPS3 used by aps_era5_download.py):
+# https://github.com/insarlab/MintPy
+
+# Scripts in this directory:
+#   aps_era5_download.py  – download ERA5 / ERA5T grib files via PyAPS3
+#   aps_meris_pwv.py      – process MERIS / Sentinel-3 OLCI IWV to LOS delay
 

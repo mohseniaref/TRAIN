@@ -35,9 +35,29 @@ end
 
 for d =1:size(date_before,1)
     if strcmpi(model_type,'era')    
-        %Format ggapYYYYMMDDHHMM.nc
+        %Format ggapYYYYMMDDHHMM.nc  (ERA-Interim, discontinued Aug 2019)
         modelfile_before(d,:) = [weather_model_datapath filesep date_before(d,:) filesep 'ggap' date_before(d,:) time_before(d,:) '.nc']; 
         modelfile_after(d,:) = [weather_model_datapath filesep date_after(d,:) filesep 'ggap' date_after(d,:) time_after(d,:) '.nc'];
+    elseif strcmpi(model_type,'era5')
+        % PyAPS3 naming: ERA5_N##_N##_W##_E##_YYYYMMDD_HH.grb (no subdirectory)
+        % area tag is determined at download time; use wildcard fallback if needed
+        era5_datapath = getparm_aps('era5_datapath',1);
+        if isempty(era5_datapath); era5_datapath = weather_model_datapath; end
+        hr_before = time_before(d,1:2);
+        hr_after  = time_after(d,1:2);
+        % try exact match first, then fall back to wildcard glob
+        cand_b = dir([era5_datapath filesep 'ERA5*' date_before(d,:) '_' hr_before '.grb']);
+        cand_a = dir([era5_datapath filesep 'ERA5*' date_after(d,:)  '_' hr_after  '.grb']);
+        if ~isempty(cand_b)
+            modelfile_before(d,:) = [era5_datapath filesep cand_b(1).name];
+        else
+            modelfile_before(d,:) = [era5_datapath filesep 'ERA5_' date_before(d,:) '_' hr_before '.grb'];
+        end
+        if ~isempty(cand_a)
+            modelfile_after(d,:) = [era5_datapath filesep cand_a(1).name];
+        else
+            modelfile_after(d,:) = [era5_datapath filesep 'ERA5_' date_after(d,:) '_' hr_after '.grb'];
+        end
     elseif strcmpi(model_type,'merra') 
         %Format MERRA_YYYYMMDD_HH.hdf
         %modelfile_before(d,:) = [weather_model_datapath filesep date_before(d,:) filesep 'MERRA_' date_before(d,:) '_' time_before(d,1:2) '.hdf'];         

@@ -99,29 +99,11 @@ For **MERIS/OLCI** Python processing (`python_modules/aps_meris_pwv.py`) also ci
 
 ## Zenodo
 
-A citable Zenodo archive of this release is available at:
+A citable archive of this toolbox is available on Zenodo:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
 
-*(Replace `XXXXXXX` with the DOI assigned after uploading a new release to [zenodo.org](https://zenodo.org).)*
-
-**To create a new Zenodo release** with these Python updates:
-1. Tag this commit: `git tag -a v2.0 -m "Python ERA5/MERIS update via PyAPS3"`
-2. Push the tag: `git push origin v2.0`
-3. On zenodo.org, link the GitHub repo and publish the release.
-4. Add yourself (M. Mohseni Aref) as a contributor/author in the Zenodo metadata.
-5. Replace `XXXXXXX` above with the assigned DOI.
-
----
-
-## Acknowledgements
-
-Thanks to Richard J. Walters, Hannes Bathke, Simran Sangha, Tim J. Wright, Andy J. Hooper,
-Doug J. Parker, Zhenhong Li, the Leeds InSAR group, COMET members, and the community
-for their feedback and contributions.
-
-Python ERA5 download and MERIS processing contributed by Mohammad Mohseni Aref (2026),
-integrated via [MintPy](https://github.com/insarlab/MintPy) PyAPS3.
+*(Update the DOI badge once a new release is published on [zenodo.org](https://zenodo.org).)*
 
 ---
 
